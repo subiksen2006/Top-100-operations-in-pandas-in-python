@@ -1,0 +1,508 @@
+import pandas as pd
+import numpy as np
+
+# Create a sample DataFrame for demonstration
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve', 'Frank', 'Grace', 'Helen', 'Ivy', 'Jack'],
+    'Age': [24, 27, 22, 32, 29, 23, 30, 28, 25, 26],
+    'Score': [85, 90, 78, 92, 88, 76, 95, 85, 80, 89],
+    'Department': ['HR', 'Tech', 'Tech', 'HR', 'Tech', 'Finance', 'Tech', 'Finance', 'HR', 'Tech']
+}
+df = pd.DataFrame(data)
+
+# 1. Accessing the first 5 rows
+print("\nFirst 5 rows:")
+print(df.head())
+
+# 2. Accessing the last 5 rows
+print("\nLast 5 rows:")
+print(df.tail())
+
+# 3. DataFrame Info (Data types, non-null counts)
+print("\nDataFrame Info:")
+df.info()
+
+# 4. Descriptive statistics
+print("\nDescriptive statistics:")
+print(df.describe())
+
+# 5. Check for missing values
+print("\nCheck for missing values:")
+print(df.isnull().sum())
+
+# 6. Fill missing values with a constant
+df['Score'].iloc[0] = np.nan
+df_filled = df.fillna(0)
+print("\nDataFrame after filling NaN with 0:")
+print(df_filled)
+
+# 7. Dropping rows with NaN values
+df_dropped = df.dropna()
+print("\nDataFrame after dropping rows with NaN:")
+print(df_dropped)
+
+# 8. Dropping a column
+df_dropped_column = df.drop(columns=['Score'])
+print("\nDataFrame after dropping 'Score' column:")
+print(df_dropped_column)
+
+# 9. Accessing a specific column (using column label)
+print("\nAccessing 'Age' column:")
+print(df['Age'])
+
+# 10. Accessing multiple columns
+print("\nAccessing 'Name' and 'Age' columns:")
+print(df[['Name', 'Age']])
+
+# 11. Accessing a specific row by index
+print("\nAccessing row with index 3:")
+print(df.iloc[3])
+
+# 12. Accessing rows based on condition
+print("\nRows where 'Age' is greater than 25:")
+print(df[df['Age'] > 25])
+
+# 13. Query data with conditions
+print("\nQuerying data where 'Score' > 80:")
+print(df.query('Score > 80'))
+
+# 14. Sorting data by a column
+print("\nData sorted by 'Age':")
+print(df.sort_values(by='Age'))
+
+# 15. Sorting data by multiple columns
+print("\nData sorted by 'Department' and 'Age':")
+print(df.sort_values(by=['Department', 'Age']))
+
+# 16. Resetting the index
+df_reset = df.reset_index(drop=True)
+print("\nDataFrame after resetting index:")
+print(df_reset)
+
+# 17. Setting a new index
+df_set_index = df.set_index('Name')
+print("\nDataFrame with 'Name' as index:")
+print(df_set_index)
+
+# 18. Renaming columns
+df_renamed = df.rename(columns={'Age': 'Employee_Age', 'Score': 'Test_Score'})
+print("\nDataFrame after renaming columns:")
+print(df_renamed)
+
+# 19. Adding a new column
+df['Salary'] = [50000, 60000, 55000, 65000, 60000, 56000, 57000, 59000, 62000, 61000]
+print("\nDataFrame after adding 'Salary' column:")
+print(df)
+
+# 20. Removing duplicates
+df_duplicates = df.drop_duplicates()
+print("\nDataFrame after removing duplicates:")
+print(df_duplicates)
+
+# 21. Getting unique values from a column
+unique_departments = df['Department'].unique()
+print("\nUnique departments:")
+print(unique_departments)
+
+# 22. Counting unique values in a column
+department_counts = df['Department'].value_counts()
+print("\nCount of unique values in 'Department' column:")
+print(department_counts)
+
+# 23. Applying a function to a column
+df['Age_plus_5'] = df['Age'].apply(lambda x: x + 5)
+print("\nDataFrame after applying a function to 'Age':")
+print(df)
+
+# 24. Grouping data by a column
+grouped = df.groupby('Department')['Score'].mean()
+print("\nAverage Score by Department:")
+print(grouped)
+
+# 25. Aggregating data with multiple functions
+agg_data = df.groupby('Department').agg({'Age': 'mean', 'Score': 'sum'})
+print("\nAggregated data (mean age, sum score by Department):")
+print(agg_data)
+
+# 26. Pivot table
+pivot_table = df.pivot_table(values='Score', index='Department', aggfunc='mean')
+print("\nPivot table of average Score by Department:")
+print(pivot_table)
+
+# 27. Merging two DataFrames
+df2 = pd.DataFrame({
+    'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eve'],
+    'Country': ['USA', 'UK', 'Canada', 'Australia', 'India']
+})
+merged_df = pd.merge(df, df2, on='Name', how='left')
+print("\nMerged DataFrame (on 'Name'):")
+print(merged_df)
+
+# 28. Concatenating DataFrames
+df3 = pd.DataFrame({
+    'Name': ['George', 'Hannah'],
+    'Age': [31, 29],
+    'Score': [88, 92],
+    'Department': ['Finance', 'HR']
+})
+concat_df = pd.concat([df, df3], ignore_index=True)
+print("\nConcatenated DataFrame:")
+print(concat_df)
+
+# 29. Pivoting DataFrame (reshaping)
+pivoted_df = df.pivot(index='Department', columns='Name', values='Score')
+print("\nPivoted DataFrame:")
+print(pivoted_df)
+
+# 30. Applying a custom function to a DataFrame
+def custom_function(row):
+    return row['Age'] * 2
+
+df['Age_double'] = df.apply(custom_function, axis=1)
+print("\nDataFrame after applying custom function to 'Age':")
+print(df)
+
+# 31. Finding the correlation between columns
+correlation = df[['Age', 'Score']].corr()
+print("\nCorrelation between 'Age' and 'Score':")
+print(correlation)
+
+# 32. Finding the covariance between columns
+covariance = df[['Age', 'Score']].cov()
+print("\nCovariance between 'Age' and 'Score':")
+print(covariance)
+
+# 33. Handling outliers using z-scores
+from scipy.stats import zscore
+df['z_score'] = zscore(df['Age'])
+df_no_outliers = df[df['z_score'].abs() < 3]
+print("\nDataFrame after removing outliers (z-score method):")
+print(df_no_outliers)
+
+# 34. Replacing values in a column
+df_replaced = df.replace({'Department': {'HR': 'Human Resources', 'Tech': 'Technology'}})
+print("\nDataFrame after replacing values in 'Department' column:")
+print(df_replaced)
+
+# 35. Renaming index labels
+df_renamed_index = df.rename(index={0: 'A', 1: 'B'})
+print("\nDataFrame with renamed index labels:")
+print(df_renamed_index)
+
+# 36. Using string methods on a column
+df['Name_upper'] = df['Name'].str.upper()
+print("\nDataFrame after using string methods on 'Name' column:")
+print(df)
+
+# 37. Creating a datetime column
+df['Join_Date'] = pd.to_datetime(['2021-01-01', '2022-05-21', '2023-07-13', '2021-12-10', '2022-09-03',
+                                   '2021-06-10', '2022-11-30', '2023-01-17', '2021-11-07', '2023-02-19'])
+print("\nDataFrame with a 'Join_Date' column:")
+print(df)
+
+# 38. Extracting year from datetime column
+df['Join_Year'] = df['Join_Date'].dt.year
+print("\nDataFrame after extracting year from 'Join_Date':")
+print(df)
+
+# 39. Extracting month from datetime column
+df['Join_Month'] = df['Join_Date'].dt.month
+print("\nDataFrame after extracting month from 'Join_Date':")
+print(df)
+
+# 40. Extracting day from datetime column
+df['Join_Day'] = df['Join_Date'].dt.day
+print("\nDataFrame after extracting day from 'Join_Date':")
+print(df)
+
+# 41. Saving DataFrame to CSV
+df.to_csv('output.csv', index=False)
+
+# 42. Loading DataFrame from CSV
+df_from_csv = pd.read_csv('output.csv')
+print("\nDataFrame loaded from CSV:")
+print(df_from_csv)
+
+# 43. Saving DataFrame to Excel
+df.to_excel('output.xlsx', index=False)
+
+# 44. Loading DataFrame from Excel
+df_from_excel = pd.read_excel('output.xlsx')
+print("\nDataFrame loaded from Excel:")
+print(df_from_excel)
+
+# 45. Saving DataFrame to HDF5
+df.to_hdf('output.h5', key='df', mode='w')
+
+# 46. Loading DataFrame from HDF5
+df_from_hdf = pd.read_hdf('output.h5', key='df')
+print("\nDataFrame loaded from HDF5:")
+print(df_from_hdf)
+
+# 47. Saving DataFrame to JSON
+df.to_json('output.json')
+
+# 48. Loading DataFrame from JSON
+df_from_json = pd.read_json('output.json')
+print("\nDataFrame loaded from JSON:")
+print(df_from_json)
+
+# 49. Saving DataFrame to Parquet
+df.to_parquet('output.parquet')
+
+# 50. Loading DataFrame from Parquet
+df_from_parquet = pd.read_parquet('output.parquet')
+print("\nDataFrame loaded from Parquet:")
+print(df_from_parquet)
+
+# 51. Checking if the DataFrame is empty
+print("\nIs DataFrame empty?")
+print(df.empty)
+
+# 52. Checking for duplicates
+print("\nCheck for duplicates:")
+print(df.duplicated())
+
+# 53. Counting the number of non-null values in each column
+print("\nCount non-null values in each column:")
+print(df.count())
+
+# 54. Converting a column to a specific data type
+df['Age'] = df['Age'].astype(float)
+print("\nDataFrame with 'Age' column converted to float:")
+print(df)
+
+# 55. Filling NaN values with the mean of a column
+df['Score'] = df['Score'].fillna(df['Score'].mean())
+print("\nDataFrame after filling NaN in 'Score' with its mean:")
+print(df)
+
+# 56. Creating a random DataFrame
+random_df = pd.DataFrame(np.random.randn(5, 4), columns=['A', 'B', 'C', 'D'])
+print("\nRandom DataFrame:")
+print(random_df)
+
+# 57. Checking for exact duplicates
+print("\nChecking for exact duplicate rows:")
+print(df.duplicated(keep=False))
+
+# 58. Dropping duplicate rows
+df_no_duplicates = df.drop_duplicates()
+print("\nDataFrame after dropping duplicate rows:")
+print(df_no_duplicates)
+
+# 59. Handling missing data using forward fill
+df_filled_ffill = df.fillna(method='ffill')
+print("\nDataFrame after forward filling missing values:")
+print(df_filled_ffill)
+
+# 60. Handling missing data using backward fill
+df_filled_bfill = df.fillna(method='bfill')
+print("\nDataFrame after backward filling missing values:")
+print(df_filled_bfill)
+
+# 61. Merging DataFrames on multiple columns
+df3 = pd.DataFrame({
+    'Name': ['Alice', 'Bob', 'Charlie', 'David'],
+    'Country': ['USA', 'UK', 'Canada', 'Australia']
+})
+merged_df = pd.merge(df, df3, on='Name')
+print("\nMerged DataFrame (multiple columns):")
+print(merged_df)
+
+# 62. Creating a multi-index DataFrame
+arrays = [
+    ['A', 'A', 'A', 'B', 'B', 'B'],
+    [1, 2, 3, 1, 2, 3]
+]
+df_multi_index = pd.DataFrame(np.random.randn(6, 2), index=arrays, columns=['X', 'Y'])
+print("\nMulti-index DataFrame:")
+print(df_multi_index)
+
+# 63. Selecting data from multi-index DataFrame
+print("\nSelecting data from multi-index DataFrame:")
+print(df_multi_index.loc['A'])
+
+# 64. Slicing DataFrame based on row range
+print("\nSlicing DataFrame to select rows 0 to 3:")
+print(df[:4])
+
+# 65. Iterating over DataFrame rows
+print("\nIterating over DataFrame rows:")
+for index, row in df.iterrows():
+    print(f"Index: {index}, Name: {row['Name']}, Age: {row['Age']}")
+
+# 66. Combining two DataFrames by concatenating along columns
+df2 = pd.DataFrame({
+    'Name': ['George', 'Hannah'],
+    'Age': [31, 29],
+    'Score': [88, 92],
+    'Department': ['Finance', 'HR']
+})
+concat_df_columns = pd.concat([df, df2], axis=1)
+print("\nConcatenated DataFrame along columns:")
+print(concat_df_columns)
+
+# 67. Splitting a column into two using str.split
+df['Name_split'] = df['Name'].str.split('e', expand=True)[0]
+print("\nDataFrame after splitting 'Name' column:")
+print(df)
+
+# 68. Using `apply` for row-wise operations
+df['Age_in_months'] = df['Age'].apply(lambda x: x * 12)
+print("\nDataFrame after applying a function to 'Age' column:")
+print(df)
+
+# 69. Stacking DataFrame
+stacked_df = df.stack()
+print("\nStacked DataFrame:")
+print(stacked_df)
+
+# 70. Unstacking DataFrame
+unstacked_df = stacked_df.unstack()
+print("\nUnstacked DataFrame:")
+print(unstacked_df)
+
+# 71. Saving DataFrame to SQL database
+import sqlite3
+conn = sqlite3.connect('example.db')
+df.to_sql('data_table', conn, if_exists='replace', index=False)
+
+# 72. Loading DataFrame from SQL database
+df_from_sql = pd.read_sql('SELECT * FROM data_table', conn)
+print("\nDataFrame loaded from SQL:")
+print(df_from_sql)
+
+# 73. Getting the first `n` elements using head()
+print("\nFirst 3 rows using head():")
+print(df.head(3))
+
+# 74. Checking the data types of each column
+print("\nData types of each column:")
+print(df.dtypes)
+
+# 75. Formatting columns with specific precision
+df['Score'] = df['Score'].map(lambda x: '{:.2f}'.format(x))
+print("\nFormatted 'Score' column:")
+print(df)
+
+# 76. Converting columns to datetime format
+df['Join_Date'] = pd.to_datetime(df['Join_Date'])
+print("\nDataFrame after converting 'Join_Date' to datetime format:")
+print(df)
+
+# 77. Expanding a DataFrame into multiple columns
+df_expanded = df['Name'].str.split(' ', expand=True)
+print("\nExpanded 'Name' column into multiple columns:")
+print(df_expanded)
+
+# 78. Mapping values in a column based on a dictionary
+df['Department'] = df['Department'].map({'HR': 'Human Resources', 'Tech': 'Technology'})
+print("\nDataFrame after mapping 'Department' values:")
+print(df)
+
+# 79. Changing case of string data
+df['Name'] = df['Name'].str.lower()
+print("\nDataFrame after converting 'Name' column to lowercase:")
+print(df)
+
+# 80. Creating a histogram of a column
+df['Age'].hist()
+print("\nHistogram of 'Age' column:")
+
+# 81. Plotting a bar chart of a column
+df['Department'].value_counts().plot(kind='bar')
+print("\nBar chart of 'Department' column:")
+
+# 82. Plotting a line chart of a column
+df['Score'].plot(kind='line')
+print("\nLine chart of 'Score' column:")
+
+# 83. Creating a scatter plot
+df.plot(kind='scatter', x='Age', y='Score')
+print("\nScatter plot between 'Age' and 'Score' columns:")
+
+# 84. Generating a pairplot for visualizing relationships between columns
+import seaborn as sns
+sns.pairplot(df[['Age', 'Score']])
+print("\nPairplot of 'Age' and 'Score' columns:")
+
+# 85. Using `pivot_table` for aggregating data
+pivot_df = df.pivot_table(values='Score', index='Department', aggfunc=np.mean)
+print("\nPivot table of 'Score' by 'Department':")
+print(pivot_df)
+
+# 86. Creating a random sample from a DataFrame
+sample_df = df.sample(n=3)
+print("\nRandom sample from DataFrame:")
+print(sample_df)
+
+# 87. Reindexing a DataFrame
+reindexed_df = df.reindex([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
+print("\nReindexed DataFrame:")
+print(reindexed_df)
+
+# 88. Creating a new index based on specific logic
+df['New_Index'] = pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+print("\nDataFrame with new custom index:")
+print(df)
+
+# 89. Using `groupby` and `agg` for aggregating multiple columns
+agg_df = df.groupby('Department').agg({'Age': 'mean', 'Score': 'max'})
+print("\nAggregated DataFrame using groupby and agg:")
+print(agg_df)
+
+# 90. Sorting by index
+sorted_by_index_df = df.sort_index()
+print("\nDataFrame sorted by index:")
+print(sorted_by_index_df)
+
+# 91. Reversing the order of rows
+reversed_df = df.iloc[::-1]
+print("\nReversed DataFrame:")
+print(reversed_df)
+
+# 92. Transposing a DataFrame
+transposed_df = df.T
+print("\nTransposed DataFrame:")
+print(transposed_df)
+
+# 93. Filtering rows based on multiple conditions
+filtered_df = df[(df['Age'] > 25) & (df['Score'] > 80)]
+print("\nFiltered DataFrame based on multiple conditions:")
+print(filtered_df)
+
+# 94. Performing arithmetic operations on columns
+df['Score_plus_10'] = df['Score'] + 10
+print("\nDataFrame after adding 10 to 'Score' column:")
+print(df)
+
+# 95. Subtracting one column from another
+df['Age_minus_10'] = df['Age'] - 10
+print("\nDataFrame after subtracting 10 from 'Age' column:")
+print(df)
+
+# 96. Performing conditional assignment on a column
+df['Age_category'] = df['Age'].apply(lambda x: 'Adult' if x > 25 else 'Young')
+print("\nDataFrame after conditional assignment to 'Age_category' column:")
+print(df)
+
+# 97. Selecting rows using `.loc[]`
+selected_rows = df.loc[df['Department'] == 'Tech']
+print("\nRows with 'Tech' in 'Department' column using .loc[]:")
+print(selected_rows)
+
+# 98. Selecting rows using `.iloc[]` (index-based)
+selected_rows_iloc = df.iloc[2:5]
+print("\nRows from index 2 to 4 using .iloc[]:")
+print(selected_rows_iloc)
+
+# 99. Applying lambda functions to multiple columns
+df['Score_scaled'] = df.apply(lambda row: row['Score'] * 1.1 if row['Department'] == 'Tech' else row['Score'], axis=1)
+print("\nDataFrame after applying lambda function across rows for 'Score' column:")
+print(df)
+
+# 100. Replacing values conditionally in a column
+df['Department'] = df['Department'].replace('Tech', 'Technology')
+print("\nDataFrame after conditionally replacing values in 'Department' column:")
+print(df)
